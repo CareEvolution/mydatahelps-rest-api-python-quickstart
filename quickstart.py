@@ -1,6 +1,7 @@
 from datetime import datetime
 from uuid import uuid4
 import os
+from typing import Optional, Dict
 import jwt  # pip install PyJWT   and  pip install cryptography
 import requests  # pip install requests
 from dotenv import load_dotenv # pip install python-dotenv
@@ -37,7 +38,7 @@ def get_token():
 def get_from_api(
     access_token: str,
     resource_url: str,
-    query_params: dict = None
+    query_params: Optional[Dict[str, str]] = None
 ) -> requests.Response:
     if query_params is None:
         query_params = {}
@@ -59,4 +60,3 @@ print(f'Obtained access token:\n{token}')
 data = get_from_api(token, '/participants')
 participants = data.json()['totalParticipants']
 print(f'\n\nTotal participants: {participants}')
-
