@@ -34,8 +34,14 @@ def get_token():
     return response.json()["access_token"]
 
 
-def get_from_api(access_token, resource_url, query_params = {}):
-
+def get_from_api(
+    access_token: str,
+    resource_url: str,
+    query_params: dict = None
+) -> requests.Response:
+    if query_params is None:
+        query_params = {}
+        
     headers = {
         "Authorization": f'Bearer {access_token}',
         "Accept": "application/json",
