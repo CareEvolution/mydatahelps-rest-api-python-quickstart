@@ -1,7 +1,7 @@
 
-# RKStudio REST API Python Quickstart
+# MyDataHelps REST API Python Quickstart
 
-This script is a demonstration of how to access the [RKStudio REST API](https://developer.rkstudio.careevolution.com/api/) using Python3. It gives an example of obtaining an access token and making a simple query to the API. You can use this app for reference, or modify it to test out your own API requests in a development environment.
+This script is a demonstration of how to access the [MyDataHelps REST API](https://developer.mydatahelps.org/) using Python3. It gives an example of obtaining an access token and making a simple query to the API. You can use this app for reference, or modify it to test out your own API requests in a development environment.
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@ Before you begin, you will need three things related to your RKStudio account:
 * Your RKStudio project ID, which is a GUID.
 * The private key you associated with your service account.
 
-For help finding this information, see the [RKStudio Developer Docs](https://developer.rkstudio.careevolution.com/api/quickstart.html).
+For help finding this information, see the [MyDataHelps Developer Docs](https://developer.mydatahelps.org/api/quickstart.html).
 
 You will also need to install the following Python packages (most easily done through the [Python Package Installer](https://pypi.org/project/pip/)):
 
@@ -36,7 +36,7 @@ If successful, the app will print out your token and number of participants in t
 ```
 Obtained access token:
   YOUR TOKEN HERE
-  
+
 Total Participants: 5
 ```
 
@@ -50,4 +50,4 @@ If you see an error when running the script, double-check the information in the
 RKS_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n230703de230703de230703de\nb62b0e24b62b0e24b62b0e24\n...\n-----END RSA PRIVATE KEY-----"
 ```
 
-If you have trouble getting the app to work, feel free to [contact RKStudio Support](https://developer.rkstudio.careevolution.com/help/).
+If you have trouble getting the app to work, feel free to [contact MyDataHelps Support](https://developer.mydatahelps.org/help.html).

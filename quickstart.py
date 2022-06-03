@@ -14,7 +14,7 @@ service_account_name = os.getenv('RKS_SERVICE_ACCOUNT')
 project_id = os.getenv('RKS_PROJECT_ID')
 
 def get_token():
-    token_url = "https://rkstudio.careevolution.com/inv/identityserver/connect/token"
+    token_url = "https://designer.mydatahelps.org/identityserver/connect/token"
 
     assertion = {
       "iss": service_account_name,
@@ -42,18 +42,18 @@ def get_from_api(
 ) -> requests.Response:
     if query_params is None:
         query_params = {}
-        
+
     headers = {
         "Authorization": f'Bearer {access_token}',
         "Accept": "application/json",
         "Content-Type":  "application/json; charset=utf-8"
     }
-    url = f'https://rkstudio.careevolution.com/inv/api/v1/administration/projects/{project_id}{resource_url}'
-    
+    url = f'https://designer.mydatahelps.org/api/v1/administration/projects/{project_id}{resource_url}'
+
     response = requests.get(url=url, params=query_params, headers=headers)
     response.raise_for_status()
     return response
-    
+
 token = get_token()
 print(f'Obtained access token:\n{token}')
 
