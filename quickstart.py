@@ -14,7 +14,7 @@ service_account_name = os.getenv('RKS_SERVICE_ACCOUNT')
 project_id = os.getenv('RKS_PROJECT_ID')
 
 def get_token():
-    token_url = "https://designer.mydatahelps.org/identityserver/connect/token"
+    token_url = 'https://mydatahelps.org/identityserver/connect/token' 
 
     assertion = {
       "iss": service_account_name,
@@ -48,7 +48,7 @@ def get_from_api(
         "Accept": "application/json",
         "Content-Type":  "application/json; charset=utf-8"
     }
-    url = f'https://designer.mydatahelps.org/api/v1/administration/projects/{project_id}{resource_url}'
+    url = f'https://mydatahelps.org/api/v1/administration/projects/{project_id}{resource_url}'
 
     response = requests.get(url=url, params=query_params, headers=headers)
     response.raise_for_status()
