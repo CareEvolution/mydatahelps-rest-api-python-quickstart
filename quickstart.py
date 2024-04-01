@@ -20,7 +20,7 @@ def get_token():
       "iss": service_account_name,
       "sub": service_account_name,
       "aud": token_url,
-      "exp": datetime.now().timestamp() + 900,
+      "exp": datetime.now().timestamp() + 200,
       "jti": str(uuid4()),
     }
     signed_assertion = jwt.encode(payload=assertion, key=private_key, algorithm="RS256")
