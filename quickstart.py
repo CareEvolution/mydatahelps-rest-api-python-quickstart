@@ -12,9 +12,9 @@ load_dotenv()
 private_key = os.getenv('RKS_PRIVATE_KEY')
 service_account_name = os.getenv('RKS_SERVICE_ACCOUNT')
 project_id = os.getenv('RKS_PROJECT_ID')
+token_url = 'https://mydatahelps.org/identityserver/connect/token' 
 
 def get_service_access_token():
-    token_url = 'https://mydatahelps.org/identityserver/connect/token' 
 
     assertion = {
       "iss": service_account_name,
@@ -37,14 +37,14 @@ def get_service_access_token():
 
 # Query all participants
 def get_participants(
-    access_token: str,
+    service_access_token: str,
     query_params: Optional[Dict[str, str]] = None
 ) -> requests.Response:
     if query_params is None:
         query_params = {}
 
     headers = {
-        "Authorization": f'Bearer {access_token}',
+        "Authorization": f'Bearer {service_access_token}',
         "Accept": "application/json",
         "Content-Type":  "application/json; charset=utf-8"
     }
@@ -56,12 +56,12 @@ def get_participants(
 
 # Query for a specific participant by participant identifier
 def get_participant(
-    access_token: str,
+    service_access_token: str,
     participant_identifier: str
-) -> requests.Response:
+):
 
     headers = {
-        "Authorization": f'Bearer {access_token}',
+        "Authorization": f'Bearer {service_access_token}',
         "Accept": "application/json",
         "Content-Type":  "application/json; charset=utf-8"
     }
@@ -72,19 +72,38 @@ def get_participant(
         return None
     response.raise_for_status()
     return response
-    
-token = get_service_access_token()
-print(f'Obtained service access token:\n{token}')
 
-data = get_participants(token)
+def get_participant_access_token(
+    service_access_token: str,
+    participant_id: str
+):
+
+    token_payload = {
+        "scope": "api user/*.read",
+        "grant_type": "delegated_participant",
+        "participant_id": participant_id,
+        "client_id": "MyDataHelps.DelegatedParticipant",
+        "client_secret": "secret",
+        "token": service_access_token,
+    }
+    response = requests.post(url=token_url, data=token_payload)
+    response.raise_for_status()
+    return response.json()["access_token"]
+    
+service_access_token = get_service_access_token()
+print(f'Obtained service access token:\n{service_access_token}')
+
+data = get_participants(service_access_token)
 participants = data.json()['totalParticipants']
 print(f'\n\nTotal participants: {participants}')
 
 participant_id = "PT-123"
-data = get_participant(token, participant_id)
+data = get_participant(service_access_token, participant_id)
 if data == None:
   print(f'Participant {participant_id} not found.')
 else:
   participant = data.json()
   id = participant['id']
   print(f'Participant {participant_id} found with MDH ID {id}')
+  participant_access_token = get_participant_access_token(service_access_token, id)
+  print(f'Obtained participant access token:\n{participant_access_token}')
