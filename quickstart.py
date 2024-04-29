@@ -73,13 +73,15 @@ def get_participant(
     response.raise_for_status()
     return response
 
+# Get a participant access token for the specified participant
 def get_participant_access_token(
     service_access_token: str,
-    participant_id: str
+    participant_id: str,
+    scopes: str
 ):
 
     token_payload = {
-        "scope": "api user/*.read",
+        "scope": scopes,
         "grant_type": "delegated_participant",
         "participant_id": participant_id,
         "client_id": "MyDataHelps.DelegatedParticipant",
@@ -105,5 +107,8 @@ else:
   participant = data.json()
   id = participant['id']
   print(f'Participant {participant_id} found with MDH ID {id}')
-  participant_access_token = get_participant_access_token(service_access_token, id)
-  print(f'Obtained participant access token:\n{participant_access_token}')
+  
+  # Request only the necessary scopes.
+  scopes = "api user/*.read"
+  participant_access_token = get_participant_access_token(service_access_token, id, scopes)
+  print(f'Obtained participant access token for {id}: {participant_access_token}')
