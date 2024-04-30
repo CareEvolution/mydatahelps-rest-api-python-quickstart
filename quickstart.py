@@ -106,6 +106,7 @@ if participant_identifier != "YOUR_PARTICIPANT_IDENTIFIER":
   
       # NOTE: This piece is only necessary when using MyDataHelps Embeddables in a custom app. 
       # Most API use cases do NOT require a participant token.
-      scopes = "api user/*.read"
+      # Be sure to request the correct scope(s) for your needs.
+      scopes = "Participant:read SurveyAnswers:read"
       participant_access_token = get_participant_access_token(service_access_token, id, scopes)
       print(f'\nObtained participant access token for {id}: {participant_access_token}')
