@@ -34,13 +34,15 @@ To run the app:
 If successful, the app will print out your token and number of participants in the console, like so:
 
 ```
-Obtained access token:
+Obtained service access token:
   YOUR TOKEN HERE
 
 Total Participants: 5
 ```
 
-The access token is only valid for a few minutes, but you can copy/paste it into a REST query tool of your choice to try out advanced queries.
+The service access token is only valid for a few minutes, but you can copy/paste it into a REST query tool of your choice to try out advanced queries.
+
+You can also edit the code to specify a participant identifier and get a participant access token for that participant. This token is only needed for [MyDataHelps Embeddables](https://developer.mydatahelps.org/embeddables), and is useful for testing with the [MyDataHelps Starter Kit](https://github.com/CareEvolution/MyDataHelpsStarterKit). 
 
 ## Troubleshooting
 

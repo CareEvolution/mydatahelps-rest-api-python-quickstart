@@ -89,22 +89,23 @@ print(f'Obtained service access token:\n{service_access_token}')
 url = f'/api/v1/administration/projects/{project_id}/participants'
 response = get_from_api(service_access_token, url)
 participants = response.json()['totalParticipants']
-print(f'\n\nTotal participants: {participants}')
+print(f'\nTotal participants: {participants}')
 
 # Get a specific participant by identifier. We disable 'raise_error' here
 # so we can handle the 404 case ourselves.
-participant_identifier = "PT-123"
-url = f'/api/v1/administration/projects/{project_id}/participants/{participant_identifier}'
-response = get_from_api(service_access_token, url, {}, False)
-if response.status_code == 404:
-  print(f'Participant {participant_identifier} not found.')
-else:
-  participant = response.json()
-  id = participant['id']
-  print(f'Participant {participant_identifier} found with MDH ID {id}')
+participant_identifier = "YOUR_PARTICIPANT_IDENTIFIER"
+if participant_identifier != "YOUR_PARTICIPANT_IDENTIFIER":
+    url = f'/api/v1/administration/projects/{project_id}/participants/{participant_identifier}'
+    response = get_from_api(service_access_token, url, {}, False)
+    if response.status_code == 404:
+      print(f'\nParticipant {participant_identifier} not found.')
+    else:
+      participant = response.json()
+      id = participant['id']
+      print(f'\nParticipant {participant_identifier} found with MDH ID {id}')
   
-  # NOTE: This piece is only necessary when using MyDataHelps Embeddables in a custom app. 
-  # Most API use cases do NOT require a participant token.
-  scopes = "api user/*.read"
-  participant_access_token = get_participant_access_token(service_access_token, id, scopes)
-  print(f'Obtained participant access token for {id}: {participant_access_token}')
+      # NOTE: This piece is only necessary when using MyDataHelps Embeddables in a custom app. 
+      # Most API use cases do NOT require a participant token.
+      scopes = "api user/*.read"
+      participant_access_token = get_participant_access_token(service_access_token, id, scopes)
+      print(f'\nObtained participant access token for {id}: {participant_access_token}')
