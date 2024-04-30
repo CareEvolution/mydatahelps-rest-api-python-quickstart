@@ -12,6 +12,7 @@ load_dotenv()
 private_key = os.getenv('RKS_PRIVATE_KEY')
 service_account_name = os.getenv('RKS_SERVICE_ACCOUNT')
 project_id = os.getenv('RKS_PROJECT_ID')
+
 base_url = 'https://mydatahelps.org'
 token_url = f'{base_url}/identityserver/connect/token' 
 
@@ -79,6 +80,8 @@ def get_participant_access_token(
     response.raise_for_status()
     return response.json()["access_token"]
     
+
+# Get a service access token, needed for all API calls.
 service_access_token = get_service_access_token()
 print(f'Obtained service access token:\n{service_access_token}')
 
