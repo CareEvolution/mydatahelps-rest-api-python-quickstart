@@ -12,7 +12,8 @@ load_dotenv()
 private_key = os.getenv('RKS_PRIVATE_KEY')
 service_account_name = os.getenv('RKS_SERVICE_ACCOUNT')
 project_id = os.getenv('RKS_PROJECT_ID')
-token_url = 'https://mydatahelps.org/identityserver/connect/token' 
+base_url = 'https://mydatahelps.org'
+token_url = f'{base_url}/identityserver/connect/token' 
 
 def get_service_access_token():
 
@@ -35,10 +36,11 @@ def get_service_access_token():
     return response.json()["access_token"]
 
 
-# Query all participants
-def get_participants(
+def get_from_api(
     service_access_token: str,
-    query_params: Optional[Dict[str, str]] = None
+    resource_url: str,
+    query_params: Optional[Dict[str, str]] = None,
+    raise_error: bool = True # Raise an error automatically if response is not a success
 ) -> requests.Response:
     if query_params is None:
         query_params = {}
@@ -48,32 +50,17 @@ def get_participants(
         "Accept": "application/json",
         "Content-Type":  "application/json; charset=utf-8"
     }
-    url = f'https://mydatahelps.org/api/v1/administration/projects/{project_id}/participants'
-
+    
+    url = f'{base_url}/{resource_url}'
     response = requests.get(url=url, params=query_params, headers=headers)
-    response.raise_for_status()
-    return response
-
-# Query for a specific participant by participant identifier
-def get_participant(
-    service_access_token: str,
-    participant_identifier: str
-):
-
-    headers = {
-        "Authorization": f'Bearer {service_access_token}',
-        "Accept": "application/json",
-        "Content-Type":  "application/json; charset=utf-8"
-    }
-    url = f'https://mydatahelps.org/api/v1/administration/projects/{project_id}/participants/{participant_identifier}'
-
-    response = requests.get(url=url, headers=headers)
-    if response.status_code == 404:
-        return None
-    response.raise_for_status()
+    
+    if raise_error:
+      response.raise_for_status()
+      
     return response
 
 # Get a participant access token for the specified participant
+# Used for MyDataHelps Embeddables ONLY
 def get_participant_access_token(
     service_access_token: str,
     participant_id: str,
@@ -95,20 +82,26 @@ def get_participant_access_token(
 service_access_token = get_service_access_token()
 print(f'Obtained service access token:\n{service_access_token}')
 
-data = get_participants(service_access_token)
-participants = data.json()['totalParticipants']
+# Get all participants
+url = f'/api/v1/administration/projects/{project_id}/participants'
+response = get_from_api(service_access_token, url)
+participants = response.json()['totalParticipants']
 print(f'\n\nTotal participants: {participants}')
 
-participant_id = "PT-123"
-data = get_participant(service_access_token, participant_id)
-if data == None:
-  print(f'Participant {participant_id} not found.')
+# Get a specific participant by identifier. We disable 'raise_error' here
+# so we can handle the 404 case ourselves.
+participant_identifier = "PT-123"
+url = f'/api/v1/administration/projects/{project_id}/participants/{participant_identifier}'
+response = get_from_api(service_access_token, url, {}, False)
+if response.status_code == 404:
+  print(f'Participant {participant_identifier} not found.')
 else:
-  participant = data.json()
+  participant = response.json()
   id = participant['id']
-  print(f'Participant {participant_id} found with MDH ID {id}')
+  print(f'Participant {participant_identifier} found with MDH ID {id}')
   
-  # Request only the necessary scopes.
+  # NOTE: This piece is only necessary when using MyDataHelps Embeddables in a custom app. 
+  # Most API use cases do NOT require a participant token.
   scopes = "api user/*.read"
   participant_access_token = get_participant_access_token(service_access_token, id, scopes)
   print(f'Obtained participant access token for {id}: {participant_access_token}')
