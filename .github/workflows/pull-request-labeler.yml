@@ -12,5 +12,5 @@ jobs:
     name: PR Labeler
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v4.3.0
+      - uses: actions/labeler@v7.0.0
         if: ${{ github.base_ref == 'main' }}
