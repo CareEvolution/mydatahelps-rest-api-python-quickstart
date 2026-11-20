@@ -1,2 +1,3 @@
 "cc/publicinfo/mdh":
-  - "**"
+  - changed-files:
+    - any-glob-to-any-file: '**'
